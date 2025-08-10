@@ -2,8 +2,10 @@ package com.example.store.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class OrderCustomerDTO {
+public class ProductDTO {
     private Long id;
-    private String name;
+    private String description;
 }

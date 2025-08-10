@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: reset-customer-sequence
+      author: raoul.k
+      changes:
+        - sqlFile:
+            path: db/changelog/customer-sequence.sql
