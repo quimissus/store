@@ -3,6 +3,7 @@ package com.example.store.aspect;
 import com.example.store.exceptions.ErrorResponse;
 import com.example.store.exceptions.StoreIllegalArgument;
 import com.example.store.exceptions.StoreValueNotFound;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,11 +16,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        ErrorResponse error = new ErrorResponse(
-                "Something went wrong: " + ex.getMessage(),
-                "GENERIC_ERROR",
-                LocalDateTime.now()
-        );
+        ErrorResponse error =
+                new ErrorResponse("Something went wrong: " + ex.getMessage(), "GENERIC_ERROR", LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

@@ -41,53 +41,45 @@ class OrderControllerTests {
 
     private final ProductDTO productDTO = new ProductDTO(1L, "Product A");
     private final CustomerDTO customerDTO = new CustomerDTO(1L, "John Doe");
-    private final OrderDTO orderDTO = new OrderDTO(
-            1L,
-            "Sample Order",
-            customerDTO,
-            List.of(productDTO)
-    );
-
+    private final OrderDTO orderDTO = new OrderDTO(1L, "Sample Order", customerDTO, List.of(productDTO));
 
     @Test
     void testCreateOrder() throws Exception {
-        Mockito.when(aggregatorService.createOrder(any(Order.class)))
-                .thenReturn(orderDTO);
+        Mockito.when(aggregatorService.createOrder(any(Order.class))).thenReturn(orderDTO);
 
         mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(orderDTO))).andReturn();
+                        .content(objectMapper.writeValueAsString(orderDTO)))
+                .andReturn();
 
-        assertAll(() -> status().isCreated(),
-                () -> jsonPath("$.description").value("Sample Order"),
-                () -> jsonPath("$.customer.name").value("John Doe"));
+        assertAll(() -> status().isCreated(), () -> jsonPath("$.description").value("Sample Order"), () -> jsonPath(
+                        "$.customer.name")
+                .value("John Doe"));
     }
 
     @Test
     void testGetOrder() throws Exception {
-        Mockito.when(aggregatorService.getAllOrders())
-                .thenReturn(List.of(orderDTO));
+        Mockito.when(aggregatorService.getAllOrders()).thenReturn(List.of(orderDTO));
 
         mockMvc.perform(get(URL)).andReturn();
 
-        assertAll("expectations",
+        assertAll(
+                "expectations",
                 () -> status().isOk(),
                 () -> jsonPath("$[0].id").value(1L),
                 () -> jsonPath("$[0].description").value("Sample Order"),
-                () -> jsonPath("$[0].customer.name").value("John Doe")
-        );
+                () -> jsonPath("$[0].customer.name").value("John Doe"));
     }
 
     @Test
     void testFindOrderById() throws Exception {
-        Mockito.when(aggregatorService.findOrderById(1L))
-                .thenReturn(orderDTO);
+        Mockito.when(aggregatorService.findOrderById(1L)).thenReturn(orderDTO);
         mockMvc.perform(get(URL + "/1")).andReturn();
-        assertAll("expectations",
+        assertAll(
+                "expectations",
                 () -> status().isOk(),
                 () -> jsonPath("$.id").value(1L),
                 () -> jsonPath("$.customer.name").value("John Doe"),
-                () -> jsonPath("$.product[0].name").value("Product A")
-        );
+                () -> jsonPath("$.product[0].name").value("Product A"));
     }
 }

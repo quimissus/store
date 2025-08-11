@@ -3,8 +3,11 @@ package com.example.store.controller;
 import com.example.store.dto.ProductDTO;
 import com.example.store.dto.ProductOrdersDTO;
 import com.example.store.entity.Product;
+import com.example.store.exceptions.StoreIllegalArgument;
+import com.example.store.exceptions.StoreValueNotFound;
 import com.example.store.service.AggregatorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,23 +33,26 @@ class ProductControllerTest {
     private final ProductDTO expectedProductDTO = new ProductDTO(1L, "Test Product");
     private final ProductOrdersDTO ordersDTO = new ProductOrdersDTO(1L, "product dto", List.of(1L, 2L));
     private final Product inputProduct = new Product(1L, "Test Product");
+
     @Autowired
     private MockMvc mockMvc;
+
     @Mock
     private AggregatorService aggregatorService;
+
     @InjectMocks
     private ProductController productController;
-    
 
     @Test
     void testCreateProduct_happyPath() throws Exception {
         when(aggregatorService.createProduct(inputProduct)).thenReturn(expectedProductDTO);
 
-        mockMvc.perform(post(URL).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(inputProduct))).andReturn();
-        assertAll(() -> status().isCreated(),
-                () -> jsonPath("$.id").value(1),
-                () -> jsonPath("$.name").value("Test Product"));
+        mockMvc.perform(post(URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(inputProduct)))
+                .andReturn();
+        assertAll(() -> status().isCreated(), () -> jsonPath("$.id").value(1), () -> jsonPath("$.description")
+                .value("Test Product"));
     }
 
     @Test
@@ -55,9 +61,8 @@ class ProductControllerTest {
         when(aggregatorService.findProductById(productId)).thenReturn(expectedProductDTO);
 
         mockMvc.perform(get(URL + "/" + productId)).andReturn();
-        assertAll(() -> status().isOk(),
-                () -> jsonPath("$.id").value(productId),
-                () -> jsonPath("$.description").value("Test Product"));
+        assertAll(() -> status().isOk(), () -> jsonPath("$.id").value(productId), () -> jsonPath("$.description")
+                .value("Test Product"));
     }
 
     @Test
@@ -66,11 +71,24 @@ class ProductControllerTest {
 
         when(aggregatorService.findOrdersByProductId(productId)).thenReturn(ordersDTO);
 
-        mockMvc.perform(get("/order/" + productId)).andReturn();
+        mockMvc.perform(get(URL + "/order/" + productId)).andReturn();
 
-        assertAll(() -> status().isOk(),
-                () -> jsonPath("$.productId").value(productId),
-                () -> jsonPath("$.orders.length()").value(2));
+        assertAll(() -> status().isOk(), () -> jsonPath("$.productId").value(productId), () -> jsonPath(
+                        "$.orders.length()")
+                .value(2));
     }
 
+    @Test
+    void testFindProductById_storeValueNotFound() throws Exception {
+        when(aggregatorService.findProductById(999L)).thenThrow(new StoreValueNotFound("not found"));
+
+        mockMvc.perform(get(URL + "/999")).andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void testFindProductById_illegalArgument() throws Exception {
+        when(aggregatorService.findProductById(-1L)).thenThrow(new StoreIllegalArgument("invalid"));
+
+        mockMvc.perform(get(URL + "/-1")).andExpect(status().isInternalServerError());
+    }
 }

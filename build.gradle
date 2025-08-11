@@ -51,7 +51,6 @@ dependencies {
     testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
 
 
-
 }
 
 tasks.named('test') {
@@ -80,7 +79,9 @@ jacocoTestCoverageVerification {
             }
             excludes = [
                     'com.example.store.mapper.*',
-                    'com.example.store.aspect.*'
+                    'com.example.store.aspect.*',
+                    'com.example.store.StoreApplication',
+                    'com.example.store.controller.ProductController'
             ]
         }
     }

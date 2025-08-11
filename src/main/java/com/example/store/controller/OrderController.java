@@ -4,7 +4,6 @@ import com.example.store.dto.OrderDTO;
 import com.example.store.entity.Order;
 import com.example.store.exceptions.StoreIllegalArgument;
 import com.example.store.exceptions.StoreValueNotFound;
-
 import com.example.store.service.AggregatorService;
 
 import org.springframework.data.domain.Pageable;
@@ -19,8 +18,7 @@ public class OrderController {
 
     private final AggregatorService aggregatorService;
 
-
-    public OrderController(AggregatorService aggregatorService){
+    public OrderController(AggregatorService aggregatorService) {
         this.aggregatorService = aggregatorService;
     }
 

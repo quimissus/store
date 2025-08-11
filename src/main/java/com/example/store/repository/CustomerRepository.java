@@ -10,12 +10,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("SELECT c FROM Customer c WHERE LOWER(c.name) ILIKE %:query%")
     Page<Customer> searchByName(@Param("query") String name, Pageable pageable);
 
     @Query("SELECT c FROM Customer c WHERE LOWER(c.name) ILIKE %:query%")
     List<Customer> searchByName(@Param("query") String name);
-
 }

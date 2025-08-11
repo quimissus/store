@@ -37,32 +37,31 @@ class CustomerControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
+
     @MockitoBean
     private CustomerService customerService;
 
     @Test
     void testCreateCustomer() throws Exception {
-        Mockito.when(customerService.createCustomer(any(Customer.class)))
-                .thenReturn(customerDto);
+        Mockito.when(customerService.createCustomer(any(Customer.class))).thenReturn(customerDto);
 
         mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(customer))).andReturn();
+                        .content(objectMapper.writeValueAsString(customer)))
+                .andReturn();
 
-        assertAll(() -> status().isCreated(),
-                  () -> jsonPath("$.name").value(expectedDTO.getName()));
+        assertAll(() -> status().isCreated(), () -> jsonPath("$.name").value(expectedDTO.getName()));
     }
 
     @Test
     void testGetAllCustomers() throws Exception {
-        Mockito.when(customerService.getAllCustomers())
-                .thenReturn(List.of(customerDto));
+        Mockito.when(customerService.getAllCustomers()).thenReturn(List.of(customerDto));
 
         mockMvc.perform(get(URL)).andReturn();
-        assertAll(() -> status().isOk(),
-                () -> jsonPath("$[0].name").value(expectedDTO.getName()));
+        assertAll(() -> status().isOk(), () -> jsonPath("$[0].name").value(expectedDTO.getName()));
     }
 
     @Test
@@ -70,26 +69,17 @@ class CustomerControllerTests {
         Mockito.when(customerService.getCustomerByName(eq("John"), any(Pageable.class)))
                 .thenReturn(List.of(customerDto));
 
-        mockMvc.perform(get(SEARCH_URL)
-                        .param("name", "John")
-                        .param("page", "0")
-                        .param("size", "10")).andReturn();
-        assertAll(() -> status().isOk(),
-                  () -> jsonPath("$[0].name").value(expectedDTO.getName()));
+        mockMvc.perform(get(SEARCH_URL).param("name", "John").param("page", "0").param("size", "10"))
+                .andReturn();
+        assertAll(() -> status().isOk(), () -> jsonPath("$[0].name").value(expectedDTO.getName()));
     }
 
     @Test
     void testGetCustomerByPage() throws Exception {
 
-        Mockito.when(customerService.getAllCustomersPage(any(Pageable.class)))
-                .thenReturn(List.of(customerDto));
+        Mockito.when(customerService.getAllCustomersPage(any(Pageable.class))).thenReturn(List.of(customerDto));
 
-        mockMvc.perform(get(PAGE_URL)
-                .param("page", "0")
-                .param("size", "10")).andReturn();
-        assertAll(() -> status().isOk(),
-                () -> jsonPath("$[0].name").value(expectedDTO.getName()));
+        mockMvc.perform(get(PAGE_URL).param("page", "0").param("size", "10")).andReturn();
+        assertAll(() -> status().isOk(), () -> jsonPath("$[0].name").value(expectedDTO.getName()));
     }
-
-
 }

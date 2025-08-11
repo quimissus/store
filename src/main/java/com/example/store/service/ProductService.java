@@ -7,6 +7,7 @@ import com.example.store.exceptions.StoreValueNotFound;
 import com.example.store.mapper.ProductMapper;
 import com.example.store.repository.ProductRepository;
 import com.example.store.validate.RequestValidator;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class ProductService {
     }
 
     public ProductDTO createProduct(Product product) {
-        return productMapper.productToProductDTO (productRepository.save(product));
+        return productMapper.productToProductDTO(productRepository.save(product));
     }
 
     public List<ProductDTO> getAllProductPage(Pageable pageable) {
@@ -37,7 +38,9 @@ public class ProductService {
     public ProductDTO findProductById(Long productId) throws StoreIllegalArgument, StoreValueNotFound {
         RequestValidator.validateId(productId);
         Optional<Product> optionalOrder = productRepository.findById(productId);
-        return optionalOrder.map(productMapper::productToProductDTO).orElseThrow(() -> new StoreValueNotFound("product not found"));
+        // Error messages should be from enum.
+        return optionalOrder
+                .map(productMapper::productToProductDTO)
+                .orElseThrow(() -> new StoreValueNotFound("product not found"));
     }
-
 }

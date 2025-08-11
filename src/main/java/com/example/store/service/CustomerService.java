@@ -6,10 +6,10 @@ import com.example.store.exceptions.StoreIllegalArgument;
 import com.example.store.mapper.CustomerMapper;
 import com.example.store.repository.CustomerRepository;
 import com.example.store.validate.RequestValidator;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 
@@ -49,5 +49,4 @@ public class CustomerService {
     public CustomerDTO createCustomer(Customer customer) {
         return customerMapper.customerToCustomerDTO(customerRepository.save(customer));
     }
-
 }

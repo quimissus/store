@@ -2,7 +2,6 @@ package com.example.store.controller;
 
 import com.example.store.dto.CustomerDTO;
 import com.example.store.entity.Customer;
-
 import com.example.store.exceptions.StoreIllegalArgument;
 import com.example.store.service.CustomerService;
 
@@ -16,10 +15,9 @@ import java.util.List;
 @RequestMapping("/customer")
 public class CustomerController {
 
-
     private final CustomerService customerService;
 
-    public CustomerController (CustomerService customerService){
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
@@ -37,6 +35,7 @@ public class CustomerController {
     public List<CustomerDTO> getCustomersByName(@PathVariable String name) throws StoreIllegalArgument {
         return customerService.getCustomerByName(name);
     }
+
     @GetMapping("/search")
     public List<CustomerDTO> getCustomersByName(@RequestParam String name, Pageable page) throws StoreIllegalArgument {
         return customerService.getCustomerByName(name, page);

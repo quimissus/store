@@ -7,9 +7,9 @@ import com.example.store.entity.Order;
 import com.example.store.entity.Product;
 import com.example.store.exceptions.StoreIllegalArgument;
 import com.example.store.exceptions.StoreValueNotFound;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -22,7 +22,6 @@ public class AggregatorService {
     public AggregatorService(OrderService orderService, ProductService productService) {
         this.orderService = orderService;
         this.productService = productService;
-
     }
 
     // Orders block //
@@ -62,11 +61,11 @@ public class AggregatorService {
     }
 
     // product block //
-    public ProductDTO findProductById(@PathVariable Long productId) throws StoreIllegalArgument, StoreValueNotFound {
+    public ProductDTO findProductById(Long productId) throws StoreIllegalArgument, StoreValueNotFound {
         return productService.findProductById(productId);
     }
 
-    public ProductOrdersDTO findOrdersByProductId(@PathVariable Long productId) throws StoreIllegalArgument, StoreValueNotFound {
+    public ProductOrdersDTO findOrdersByProductId(Long productId) throws StoreIllegalArgument, StoreValueNotFound {
         return findOrderByProductId(productId);
     }
 
@@ -74,5 +73,3 @@ public class AggregatorService {
         return productService.createProduct(product);
     }
 }
-
-

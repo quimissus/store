@@ -11,7 +11,7 @@ public class LogTimeInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogTimeInterceptor.class);
 
     @Around("@annotation(LogTime)")
-    //@Around("@annotation(com.example.store.intercept.LogTime)")
+    // @Around("@annotation(com.example.store.intercept.LogTime)")
     public Object logTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
