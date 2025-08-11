@@ -61,14 +61,29 @@ tasks.named('test') {
 
 tasks.jacocoTestReport {
     dependsOn tasks.test // Ensure tests run before generating the report
-
+    println "Included classes in Jacoco report:"
+    classDirectories.files.each { println it }
     reports {
         html.required.set(true)
     }
-    afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it,
-                    exclude: ['**/mapper/**', '**/StoreApplication.class'])
-        })
+
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS' // or BUNDLE, PACKAGE, METHOD
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+            excludes = [
+                    'com.example.store.mapper.*',
+                    'com.example.store.aspect.*'
+            ]
+        }
     }
 }
+
+check.dependsOn jacocoTestCoverageVerification

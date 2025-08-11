@@ -5,9 +5,7 @@ import com.example.store.entity.Customer;
 
 import com.example.store.exceptions.StoreIllegalArgument;
 import com.example.store.service.CustomerService;
-import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +14,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
-@RequiredArgsConstructor
 public class CustomerController {
 
 
-    @Autowired
-    CustomerService customerService;
+    private final CustomerService customerService;
+
+    public CustomerController (CustomerService customerService){
+        this.customerService = customerService;
+    }
 
     @GetMapping
     public List<CustomerDTO> getAllCustomers() {

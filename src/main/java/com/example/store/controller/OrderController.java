@@ -6,9 +6,7 @@ import com.example.store.exceptions.StoreIllegalArgument;
 import com.example.store.exceptions.StoreValueNotFound;
 
 import com.example.store.service.AggregatorService;
-import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +15,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/order")
-@RequiredArgsConstructor
 public class OrderController {
 
-    @Autowired
-    private AggregatorService aggregatorService;
+    private final AggregatorService aggregatorService;
 
+
+    public OrderController(AggregatorService aggregatorService){
+        this.aggregatorService = aggregatorService;
+    }
 
     @GetMapping
     public List<OrderDTO> getAllOrders() {

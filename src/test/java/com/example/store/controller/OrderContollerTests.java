@@ -1,16 +1,15 @@
 package com.example.store.controller;
 
-import com.example.store.entity.Customer;
+import com.example.store.dto.CustomerDTO;
+import com.example.store.dto.OrderDTO;
+import com.example.store.dto.ProductDTO;
 import com.example.store.entity.Order;
 import com.example.store.mapper.CustomerMapper;
-import com.example.store.repository.CustomerRepository;
-import com.example.store.repository.OrderRepository;
+import com.example.store.service.AggregatorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.RequiredArgsConstructor;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,64 +18,76 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(OrderController.class)
 @ComponentScan(basePackageClasses = CustomerMapper.class)
-@RequiredArgsConstructor
 class OrderControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
 
+    @MockitoBean
+    private AggregatorService aggregatorService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockitoBean
-    private OrderRepository orderRepository;
+    private static final String URL = "/order";
 
-    @MockitoBean
-    private CustomerRepository customerRepository;
+    private final ProductDTO productDTO = new ProductDTO(1L, "Product A");
+    private final CustomerDTO customerDTO = new CustomerDTO(1L, "John Doe");
+    private final OrderDTO orderDTO = new OrderDTO(
+            1L,
+            "Sample Order",
+            customerDTO,
+            List.of(productDTO)
+    );
 
-    private Order order;
-    private Customer customer;
-
-    @BeforeEach
-    void setUp() {
-        customer = new Customer();
-        customer.setName("John Doe");
-        customer.setId(1L);
-
-        order = new Order();
-        order.setDescription("Test Order");
-        order.setId(1L);
-        order.setCustomer(customer);
-    }
 
     @Test
     void testCreateOrder() throws Exception {
-        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
-        when(orderRepository.save(order)).thenReturn(order);
+        Mockito.when(aggregatorService.createOrder(any(Order.class)))
+                .thenReturn(orderDTO);
 
-        mockMvc.perform(post("/order")
+        mockMvc.perform(post(URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(order)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.description").value("Test Order"))
-                .andExpect(jsonPath("$.customer.name").value("John Doe"));
+                        .content(objectMapper.writeValueAsString(orderDTO))).andReturn();
+
+        assertAll(() -> status().isCreated(),
+                () -> jsonPath("$.description").value("Sample Order"),
+                () -> jsonPath("$.customer.name").value("John Doe"));
     }
 
     @Test
     void testGetOrder() throws Exception {
-        when(orderRepository.findAll()).thenReturn(List.of(order));
+        Mockito.when(aggregatorService.getAllOrders())
+                .thenReturn(List.of(orderDTO));
 
-        mockMvc.perform(get("/order"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$..description").value("Test Order"))
-                .andExpect(jsonPath("$..customer.name").value("John Doe"));
+        mockMvc.perform(get(URL)).andReturn();
+
+        assertAll("expectations",
+                () -> status().isOk(),
+                () -> jsonPath("$[0].id").value(1L),
+                () -> jsonPath("$[0].description").value("Sample Order"),
+                () -> jsonPath("$[0].customer.name").value("John Doe")
+        );
+    }
+
+    @Test
+    void testFindOrderById() throws Exception {
+        Mockito.when(aggregatorService.findOrderById(1L))
+                .thenReturn(orderDTO);
+        mockMvc.perform(get(URL + "/1")).andReturn();
+        assertAll("expectations",
+                () -> status().isOk(),
+                () -> jsonPath("$.id").value(1L),
+                () -> jsonPath("$.customer.name").value("John Doe"),
+                () -> jsonPath("$.product[0].name").value("Product A")
+        );
     }
 }

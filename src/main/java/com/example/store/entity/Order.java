@@ -25,5 +25,4 @@ public class Order {
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Product> product;
-    // more attribute to be added.
 }
