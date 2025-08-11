@@ -1,0 +1,264 @@
+{
+	"info": {
+		"_postman_id": "28694287-49f5-4b67-a287-4d89114d4f16",
+		"name": "store_api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33409670"
+	},
+	"item": [
+		{
+			"name": "getAllcustomers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "sms",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"to\": \"+27832341263\",\n    \"body\": \"Hello World!\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8085/customer",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createcustomer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"name\": \"Lance Stiedemann Sr.\",\n        \"orders\": [\n            {\n                \"description\": \"new Awesome Concrete Shirt\"\n            },\n            {\n                \"description\": \"new Small Granite Chicken\"\n            }\n        ]\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/customer",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllOrders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/order",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createOrder",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"description\": \"Handcrafted Soft Chair 31\",\n        \"customer\": {\n            \"id\": 6,\n            \"name\": \"Vicki Kutch\"\n        },\n        \"product\":[\n            {\n                \"id\": 3,\n                \"description\": \"order1test 3\"\n            }\n        ]\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/order",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getorderById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/order/10014",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"order",
+						"10014"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOrderByPage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/order/page?page=1&size=100&sort=id,asc",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"order",
+						"page"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "100"
+						},
+						{
+							"key": "sort",
+							"value": "id,asc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCustomerByname",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/customer/Har",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"customer",
+						"Har"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCustomerByNamePage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/customer/search?name=de&page=0&size=4",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"customer",
+						"search"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "de"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createProduct",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\":\"order1test 4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProductById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/product/order/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"product",
+						"order",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
