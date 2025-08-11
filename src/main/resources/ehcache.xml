@@ -1,0 +1,16 @@
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
+        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core.xsd">
+
+    <cache alias="productCache">
+        <key-type>java.lang.Long</key-type>
+        <value-type>com.example.store.model.Product</value-type>
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <heap-store-settings>
+            <max-object-size unit="B">100</max-object-size>
+        </heap-store-settings>
+
+    </cache>
+</config>

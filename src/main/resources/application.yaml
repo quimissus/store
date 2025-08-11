@@ -1,6 +1,10 @@
 server:
   port: 8085
 spring:
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:ehcache.xml
   datasource:
     url: jdbc:postgresql://localhost:5433/store
     username: admin
@@ -10,13 +14,18 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+        cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
         format_sql: true
         use_sql_comments: true
         default_batch_fetch_size: 10
         generate_statistics: false
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-#logging:
-  #level:
-    #org.hibernate.SQL: DEBUG
-    #org.hibernate.type.descriptor.sql: TRACE
+  logging:
+    level:
+      root: debug
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type.descriptor.sql: TRACE

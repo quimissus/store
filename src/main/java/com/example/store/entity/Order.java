@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import java.util.List;
 
 @Entity
@@ -13,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "\"order\"")
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
