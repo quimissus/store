@@ -6,6 +6,7 @@ import com.example.store.entity.Product;
 import com.example.store.exceptions.StoreIllegalArgument;
 import com.example.store.exceptions.StoreValueNotFound;
 import com.example.store.service.AggregatorService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +25,7 @@ public class ProductController {
         return aggregatorService.createProduct(product);
     }
 
-    // check this endpoint again
     @GetMapping("/{productId}")
-    public ProductDTO findProductById(@PathVariable Long productId) throws StoreValueNotFound, StoreIllegalArgument {
-        return aggregatorService.findProductById(productId);
-    }
-
-    @GetMapping("/order/{productId}")
     public ProductOrdersDTO findOrdersById(@PathVariable Long productId)
             throws StoreValueNotFound, StoreIllegalArgument {
         return aggregatorService.findOrdersByProductId(productId);
