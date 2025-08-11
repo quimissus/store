@@ -10,11 +10,6 @@ echo "3. Running clean test jacocoTestReport"
 ./gradlew clean test jacocoTestReport
 echo "Done ==== Running clean test jacocoTestReport"
 
-#echo "4. Running docker-compose up --build"
-##docker-compose up --build
-#docker compose up --build
-#echo "Done ==== Running docker-compose up --build"
-
 docker rm -f store-app
 docker volume rm store-app
 
@@ -24,8 +19,7 @@ echo "Done === building docker image"
 
 
 
-#echo "5. Deploying app check: http://localhost:8085"
-#docker run -p 8085:8085 -v $(pwd)/logs:/app/logs store-app
+echo "5. Deploying app check: http://localhost:8085"
 
 docker run -d \
   --name store-app \
